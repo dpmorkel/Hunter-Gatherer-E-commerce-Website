@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title>About</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+        <link rel="stylesheet" href="../CSS/style.css"/>
+        <style type="text/css">
+            .wrapper{
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-auto-rows: minmax (100px, auto);  
+                grid-row-gap:3em;
+                grid-column-gap:3em;
+                text-align:center;
+            }
+        </style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+            }
+            
+            $(function(){
+                var includes = $('[data-include]');
+                jQuery.each(includes, function(){
+                    var file = $(this).data('include') + '.html';
+                    $(this).load(file);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div data-include="header"></div>
+        <div class="wrapper" style="padding-top:80px; padding-bottom:100px;">
+            <div style="grid-column:1/13; position:relative; text-align:center;">
+                <img src="../Images/about header.png" width="100%"/>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+                    <h1 class="titlefont">ABOUT US</h1>
+                </div>
+            </div>
+            <div style="grid-column:1/3;"></div>
+            <div style="grid-column:3/11;">
+                <h2>HUNTER GATHERER,<br/>THE NEW KID ON THE BLOCK.</h2>
+            </div>
+            <div style="grid-column:11/13;"></div>
+            <div style="grid-column:1/3;"></div>
+            <div style="grid-column:3/7;">
+                <img src="../Images/NA pic.jpg" style="width:100%;">
+            </div>
+            <div style="grid-column:7/11;text-align:left;">
+                <p>In 2009, as a first year photography student, Nadine Aucamp started shopping at second-hand stores for her clothes.  A shortfall in spending money necessitated this choice, but a love for all things vintage quickly made this a passion.<br/><br/>
+                This passion quickly evolved into a fully-fledged vintage shop, as many other students wanted to own unique items as well.  By the time Nadine graduated, she had established the Hunter Gatherer brand and will now continue to share all things vintage through the Hunter Gatherer online shop.<br/><br/>
+                Feel free to contact Nadine, the girl behind HG, with any special requests, questions, or if you are interested in collaborating on a new collection!</p><br/><br/>
+                <a href="contact.html" class="defaultbutton" >CONTACT</a>
+            </div>
+            <div style="grid-column:11/13;"></div>
+        </div>
+        <div data-include="footer"></div>
+    </body>
+</html>

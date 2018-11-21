@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <title>Shopping Cart</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+		<link rel="stylesheet" href="../CSS/style.css"/>
+		<style type="text/css">
+		.wrapper{
+			display:grid;
+			grid-template-columns: repeat(12, 1fr);
+			grid-auto-rows: minmax (100px, auto);  
+			grid-row-gap:3em;
+			text-align:center;
+		}
+		.grouprow{
+			display:grid;
+			grid-template-columns:repeat(12, 1fr);
+			grid-column:1/13;
+			align-items:center;
+			justify-items:center;
+		}
+		
+		</style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        document.getElementById("total").innerHTML = "TOTAL // R" + data;
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/cartManagement.php?x=loadCart1", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        var form = document.getElementById("cartItems");
+                        var productID = document.createElement("input");
+                        productID.setAttribute("type", "hidden");
+                        productID.setAttribute("name", "productID");
+                        form.appendChild(productID);
+                        for (var row = 0; row < data.length; row++) {
+                            var leftDiv = document.createElement("div");
+                            leftDiv.setAttribute("style", "grid-column:1/3");
+                            var imageDiv = document.createElement("div");
+                            imageDiv.setAttribute("style", "grid-column:3/5");
+                            var image = document.createElement("img");
+                            image.setAttribute("src", data[row][3]);
+                            image.setAttribute("style", "width:100%");
+                            var nameDiv = document.createElement("div");
+                            nameDiv.setAttribute("style", "grid-column:5/8");
+                            var name = document.createElement("h3");
+							name.setAttribute("style", "text-transform:uppercase;");
+                            name.innerHTML = data[row][1];
+                            var padDiv = document.createElement("div");
+                            padDiv.setAttribute("style", "grid-column:8/9");
+                            var priceDiv = document.createElement("div");
+                            priceDiv.setAttribute("style", "grid-column:9/10");
+                            var price = document.createElement("h3");
+                            price.innerHTML = "R" + data[row][2];
+                            var removeDiv = document.createElement("div");
+                            removeDiv.setAttribute("style", "grid-column:10/11");
+                            var remove = document.createElement("input");
+                            remove.setAttribute("type", "submit");
+                            remove.setAttribute("name", "removeProduct");
+                            remove.setAttribute("value", "x");
+                            remove.setAttribute("class", "deleteItem");
+                            remove.setAttribute("id", data[row][0]);
+                            remove.setAttribute("alt", "Submit");
+                            remove.onclick = function() {
+                                for (i = 0; i < data.length; i++)   {
+                                        if (data[i][0] == this.getAttribute("id"))  {
+                                            productID.setAttribute("value", data[i][0]);
+                                    }
+                                }
+                            }
+                            var rightDiv = document.createElement("div");
+                            var br = document.createElement("br");
+                            rightDiv.setAttribute("style", "grid-column:11/13");
+                            imageDiv.appendChild(image);
+                            nameDiv.appendChild(name);
+                            priceDiv.appendChild(price);
+                            removeDiv.appendChild(remove); 
+                            form.appendChild(leftDiv);
+                            form.appendChild(imageDiv);
+                            form.appendChild(nameDiv);
+                            form.appendChild(padDiv);
+                            form.appendChild(priceDiv);
+                            form.appendChild(removeDiv);
+                            form.appendChild(rightDiv); 
+                            form.appendChild(br);
+                        }
+
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/cartManagement.php?x=loadCart2", true);
+                xmlhttp.send();
+                
+            }
+            
+            $(function(){
+				var includes = $('[data-include]');
+				jQuery.each(includes, function(){
+					var file = $(this).data('include') + '.html';
+					$(this).load(file);
+				});
+			});
+        </script>
+    </head>
+    <body>
+		<div data-include="header"></div>
+		<div class="wrapper" style="padding-top:80px;">
+			<div style="grid-column:1/13; position:relative; text-align:center;">
+				<img src="../Images/cart header.png" width="100%"/>
+				<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+					<h1>CART</h1>
+				</div>
+			</div>
+			<form class="grouprow" id="cartItems" action="../Controllers/cartManagement.php" method="POST">
+                <!--Dynamically load JS content-->
+            </form>
+            <div style="grid-column:1/3"></div>
+            <div style="grid-column:3/11"><hr/></div>
+            <div style="grid-column:11/13"></div>
+			<div class="grouprow" style="align-items:center; justify-items:end;">
+				<div style="grid-column:1/3;"></div>
+				<div style="grid-column:3/7;"></div>
+				<div style="grid-column:7/11;">	
+					<form id="cartFooter" action="../Controllers/cartManagement.php" method="POST" style="padding-bottom:5em;">
+						<h2 id="total"></h2>
+						<input type="submit" name="checkout" value="checkout" class="defaultbutton"/>
+					</form>
+				</div>
+				<div style="grid-column:11/13;"></div>
+			</div>
+		</div>
+		<div data-include="footer"></div>
+    </body>
+</html>

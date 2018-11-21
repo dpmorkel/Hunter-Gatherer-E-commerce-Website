@@ -1,0 +1,150 @@
+<html>
+    <head>
+        <title>Home</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet">
+        <link rel="stylesheet" href="CSS/style.css"/>
+        <style type="text/css">
+            .wrapper{
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-auto-rows: minmax (100px, auto);  
+                grid-row-gap:3em;
+            }
+            .grouprow{
+                    display:grid;
+                    grid-template-columns:repeat(12, 1fr);
+                    grid-column:1/13;
+            }
+			.wrapper1{
+				display:grid;
+				grid-template-columns: repeat(12, 1fr);  
+				grid-row-gap:3em;
+				text-align:center;
+				align-items:center;
+				margin-right:8px;
+			}
+			.wrapper2{
+                display:grid;
+                grid-template-columns:repeat(13, 1fr);
+                align-items:center;
+                justify-items:center;
+                text-align:center;
+
+            }
+            .wrapper2 > div{
+                padding:1em;
+            }
+			.social{
+                display:grid;
+                grid-template-columns:repeat(3, 1fr);
+                align-items:center;
+                justify-items:center;
+            }
+        </style>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+            }
+        </script>
+    </head>
+    <body>
+        <div class="wrapper1" style="position:fixed;z-index:100;background-color:#e1e1e1;">
+			<div style="grid-column:1/2;">
+				<a href="index.html"><img src="Images/Logo.png" style="width:80px;"/></a>
+			</div>
+			<div style="grid-column:2/9; text-align:right;">
+				<ul>
+					<li><a href="index.html" class="listItems">HOME</a></li>
+					<li><a href="Views/about.html" class="listItems">ABOUT</a></li>
+					<li><a href="Views/shop.html" class="listItems">SHOP</a></li>
+					<li><a href="Views/contact.html" class="listItems">CONTACT US</a></li>
+				</ul>
+			</div>
+			<div style="grid-column:9/10;" >
+				<form action="Controllers/userManagement.php" method="POST" style="padding-top:15px;">
+					<input type="submit" class="inputHeader" id="loginLogout" name="loginLogout" value="log in/register"/>
+				</form>
+			</div>
+			<div style="grid-column:10/11;">
+				 <form action="Controllers/cartManagement.php" method="POST" style="padding-top:15px; text-align:right;">    
+					 <button type="submit" name="viewCart" value="shopping cart" class="shoppingCart">   
+                         <img src="Images/shop.png" style="width:35px;"/>
+                     </button>
+				</form>
+			</div>
+			<div style="grid-column:11/13;">
+				 <form action="Controllers/productManagement.php" method="POST" style="padding-top:15px;">
+					<input type="text" class="search" name="searchTerm" required/>
+					<input type="submit" class="searchButton" name="search" value="search"/>
+				</form>
+			</div>
+		</div>
+        <div class="wrapper" style="padding-top:80px; margin-bottom:100px;">
+            <div style="grid-column:1/13; position:relative; text-align:center;">
+                <img src="Images/home header.png" width="100%"/>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+                    <h1 class="titlefont">HUNTER GATHERER</h1>
+                    <h2 class="subtitlefont">VINTAGE CLOTHING</h2>
+                </div>
+            </div>
+            <div class="grouprow" style="align-items:center;">
+                <div style="grid-column:1/3;"></div>
+                <div style="grid-column:3/7; text-align:left;">
+                    <h2>MORE THAN JUST A VINTAGE CLOTHING STORE</h2>
+                </div>
+                <div style="grid-column:7/11; text-align:right;">
+                    <p>Hunter Gatherer is a curated vintage clothing store with a difference.  All items are individually sourced at second-hand clothing stores across the country.  We bring you a truly vintage experience by hand-picking each item from the 70s - 00s eras.</p>
+                </div>
+                <div style="grid-column:11/13;"></div>
+            </div>
+			
+            <div style="grid-column:1/3;"></div>
+            <div style="grid-column:3/11; position:relative; text-align:center;">
+                <img src="Images/Home Shop.png" style="width:100%;"> 
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+                    <a href="Views/shop.html" class="defaultbutton">SHOP NOW</a>
+                </div>
+            </div>
+            <div style="grid-column:11/13;"></div>
+			<br/>
+            <div style="grid-column:1/5;"></div>
+            <div style="grid-column:5/9; background-color:lightgrey; text-align:center;padding-bottom:50px;">
+                    <h3 style="color:white;">JOIN THE HG FAMILY</h3>
+					<br/>
+                    <a href="Views/login.html" class="defaultbutton" style="font-size:13px;">LOG IN / REGISTER</a>
+                </div>
+            <div style="grid-column:9/13;"></div>
+        </div>
+		<hr style="color:#a77f8a; height:2px; background-color:#a77f8a; border:none;"/>
+		<div class="wrapper2">
+			<div style="grid-column:1/5;"></div>
+			<div><img src="Images/footer1.png" style="width:100%"></div>
+			<div><img src="Images/footer2.png" style="width:100%"></div>
+			<div><img src="Images/footer3.png" style="width:100%"></div>
+			<div><img src="Images/footer4.png" style="width:100%"></div>
+			<div><a href="#" class="listItems">FOLLOW US ON INSTAGRAM</a></div>
+			<div style="grid-column:10/14;"></div>
+		</div>
+		
+		<hr style="color:#a77f8a; height:2px; background-color:#a77f8a; border:none;"/>
+		<div class="social">
+			<div></div>
+			<div class="box1"><a href="#"><img src="Images/twitter.png" width="35px" height="35px" style="padding:10px;"></a>
+			<a href="#"><img src="Images/facebook.png" width="35px" height="35px" style="padding:10px;"></a>
+			<a href="#"><img src="Images/insta.png" width="35px" height="35px" style="padding:10px;"></a></div>
+			<div></div>
+		</div>
+    </body>
+</html>

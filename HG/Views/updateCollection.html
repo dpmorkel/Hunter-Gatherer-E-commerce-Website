@@ -1,0 +1,230 @@
+<html>
+    <head>
+        <title>Update Collection</title>
+        <link rel="stylesheet" href="../CSS/styleCM.css"/>
+        <style>
+            .wrapper
+            {
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-row-gap:2em;
+                text-align:center;
+            }
+
+            hr
+            {
+                display: block;
+                height: 1px;
+                border: 0;
+                border-top: 1px solid black;
+                margin: 1em 0;
+                padding: 0;
+            }
+
+            table.productTable
+            {
+                border-collapse: collapse;
+            }
+
+            table.productTable th, table.productTable td
+            {
+                padding: 10px;
+                border: 1px solid black;
+            }
+
+            table.productTable td:hover
+            {
+                cursor: default;
+            }
+
+            table.productTable th
+            {
+                background-color: #2b2b2b;
+                font-family: Poppins, sans serif;
+	            font-size: 13px;
+                font-weight: 500 medium;
+                letter-spacing: 3.6px;
+                color: white;
+            }
+            
+            table.collectionTable
+            {
+                font-family: Poppins, sans serif;
+                font-size: 14pt;
+            }
+            
+            table.collectionTable td
+            {   
+                text-align:left;
+                vertical-align: middle;
+                padding: 10px;
+            }
+            
+            textarea, input, select
+            {
+                resize: none;
+                font-family: Poppins, sans serif;
+                font-size: 14pt;
+            }
+
+            table.collectionTable td *
+            {
+                width: 100%;
+            }
+        </style>
+        <script>
+            var selection;
+            var data;
+            
+            window.onload = function()    {      
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {                   
+                    if (this.readyState == 4 && this.status == 200) {
+                        data = JSON.parse(this.responseText);
+                        var table = document.getElementById("productTable");
+                        var tbody = document.createElement("tbody"),tr, td, txt;
+                        for (var r = 0; r < data.length; r++)    {
+                            tr = document.createElement("tr");
+                            tr.onclick = function() {
+                                var rows = this.parentNode.childNodes;
+                                for (var i = 0; i < rows.length; i++)   {
+                                    if (rows[i].style.backgroundColor != 'white') {
+                                        rows[i].style.backgroundColor = 'white';
+                                        this.style.backgroundColor = 'a77f8a';
+                                        selection = this.firstChild.innerHTML;
+                                    } else  {
+                                        this.style.backgroundColor = 'a77f8a';
+                                        selection = this.firstChild.innerHTML;
+                                    }
+                                }
+                            }
+                            for (var c = 1; c < 3; c++)   {
+                                td = document.createElement("td");
+                                if (c == 2) {
+                                    if (data[r][c] == 1)    {
+                                        txt = document.createTextNode("Available");
+                                    } else  {
+                                        txt = document.createTextNode("Unavailable");
+                                    }
+                                } else  {
+                                    txt = document.createTextNode(data[r][c]);
+                                } 
+                                td.appendChild(txt);
+                                tr.appendChild(td);
+                            }
+                            tbody.appendChild(tr);
+                            table.appendChild(tbody);
+                        }
+                    }
+                }
+                
+                xmlhttp.open("GET", "../Controllers/ContentManagement.php?x=loadUpdateCollection1", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {   
+                    if (this.readyState == 4 && this.status == 200) {   
+                        var details = JSON.parse(this.responseText);
+                        document.getElementById("name").value = details[0];
+                        document.getElementById("flavour").value = details[1];
+                        document.getElementById("currentImage").innerHTML = details[2];
+                        document.getElementById("hiddenImage").value = details[2];
+                        document.getElementById("active").value = details[3];
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/ContentManagement.php?x=loadUpdateCollection2", true);
+                xmlhttp.send();
+            }
+            
+            function updateProduct()  {
+                var productID = getProductID();
+                if (productID != null)   {
+                    document.getElementById("productID").value = productID;
+                    return true;
+                } else  {
+                    alert("Please select a Product to update");
+                    return false;
+                }
+            }
+            
+            function getProductID()  {
+                var productID;
+                for (var i = 0; i < data.length; i++)    {
+                    if (selection == data[i][1]) {
+                        productID = data[i][0];
+                        break;
+                    }
+                }
+                return productID;
+            }
+        </script>
+    </head>
+    <body style="background-color: #e1e1e1;">
+        <div class="wrapper">
+            <div style="grid-column:1/13;">
+                <h1 class="titlefont" style="color:black;">Content Management</h1>       
+            </div>
+            <div style="grid-column:1/13;">
+                <hr/>
+                <h1 class="subtitlefont" style="color:black;">Update Collection</h1>
+            </div>
+            <div style="grid-column:1/6; display:grid; grid-template-columns:repeat(5, 1fr);" align="right">
+                <div style="grid-column:1/6; max-height:389px; overflow-y:auto;">
+                    <table class="productTable" id="productTable" style="text-align:center; background-color:white;" width="70%">
+                        <tr>
+                            <th>PRODUCT NAME</th>
+                            <th>STATUS</th>
+                        </tr>
+                        <!--Dynamically JS content-->
+                    </table>
+                </div>
+                <form onsubmit="return updateProduct()" action="../Controllers/contentManagement.php" method="POST" style="grid-column:1/6; padding-top:2em;">
+                    <input type="button" class="defaultbutton" value="INSERT PRODUCT" onclick="location.href='insertProduct.html'" style="margin-right:20px;"/>
+                    <input type="hidden" id="productID" name="productID" value=""/>
+                    <input type="submit" name="postProductID" class="defaultbutton" value="UPDATE PRODUCT"/>               
+                </form> 
+            </div>
+            <div style="grid-column:6/8;">
+            </div>
+            <form action="../Controllers/contentManagement.php" method="post" enctype="multipart/form-data" style="grid-column:8/13; display:grid; grid-template-columns:repeat(5, 1fr);" align="left">
+                <table style="grid-column:1/6; max-height:389px;" width="70%" class="collectionTable" border="0">
+                    <tr>
+                        <td>Collection Name</td>
+                        <td><input type="text" name="name" id="name" required/></td>
+                    </tr>
+                    <tr>
+                        <td>Flavour Text</td>
+                        <td><textarea id="flavour" name="flavour" cols="30" rows="7" required></textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Image</td>
+                        <td id="currentImage" style="text-align:left;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="file" name="image" id="image" accept="image/x-png,image/gif,image/jpeg"></td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td>
+                            <select id="active" name="active">
+                                <option value=1>Active</option>
+                                <option value=0>Inactive</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <div style="grid-column:1/6; padding-top:2em;">
+                    <input type="hidden" name="currentImage" id="hiddenImage"/>
+                    <input type="submit" name="updateCollection" class="defaultbutton" value="SUBMIT DETAILS" style="margin-right:20px;"/>
+                </div>
+            </form>
+            <div style="grid-column:1/13;">
+                <hr/>
+            </div>
+            <div style="grid-column:1/6;" align="right">
+                <input type="button" class="defaultbutton" value="BACK" onclick="location.href='contentManagement.html'"/>
+            </div>
+        </div>
+    </body>
+</html>

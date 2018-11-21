@@ -1,0 +1,48 @@
+<html>
+    <head>
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+		<style type="text/css">
+			.wrapper1{
+				display:grid;
+				grid-template-columns: repeat(12, 1fr);  
+				grid-row-gap:3em;
+				text-align:center;
+				align-items:center;
+				margin-right:8px;
+			}					
+		</style>
+    </head>
+    <body>
+		<div class="wrapper1" style="position:fixed;z-index:100;background-color:#e1e1e1;">
+			<div style="grid-column:1/2;">
+				<a href="../index.html"><img src="../Images/Logo.png" style="width:80px;"/></a>
+			</div>
+			<div style="grid-column:2/9; text-align:right;">
+				<ul>
+					<li><a href="../index.html" class="listItems">HOME</a></li>
+					<li><a href="about.html" class="listItems">ABOUT</a></li>
+					<li><a href="shop.html" class="listItems">SHOP</a></li>
+					<li><a href="contact.html" class="listItems">CONTACT US</a></li>
+				</ul>
+			</div>
+			<div style="grid-column:9/10;" >
+				<form action="../Controllers/userManagement.php" method="POST" style="padding-top:15px;">
+					<input type="submit" class="inputHeader" id="loginLogout" name="loginLogout" value="log in/register"/>
+				</form>
+			</div>
+			<div style="grid-column:10/11;">
+				 <form action="../Controllers/cartManagement.php" method="POST" style="padding-top:15px; text-align:right;">    
+					 <button type="submit" name="viewCart" value="shopping cart" class="shoppingCart">   
+                         <img src="../Images/shop.png" style="width:35px;"/>
+                     </button>
+				</form>
+			</div>
+			<div style="grid-column:11/13;">
+				 <form action="../Controllers/productManagement.php" method="POST" style="padding-top:15px;">
+					<input type="text" class="search" name="searchTerm" required/>
+					<input type="submit" class="searchButton" name="search" value="search"/>
+				</form>
+			</div>
+		</div>
+    </body>
+</html>

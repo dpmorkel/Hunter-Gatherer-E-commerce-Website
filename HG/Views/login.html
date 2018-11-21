@@ -1,0 +1,134 @@
+<html>
+    <head>
+        <title>Login/Register</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+		<style type="text/css">
+			.wrapper{
+				display:grid;
+				grid-template-columns: repeat(12, 1fr);
+				grid-auto-rows: minmax (100px, auto);  
+				grid-row-gap:3em;
+				text-align:center;
+			}
+			.grouprow{
+				display:grid;
+				grid-template-columns:repeat(12, 1fr);
+				grid-column:1/13;
+				align-items:center;
+				justify-items:center;
+			}   
+		</style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            var data;
+            
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        data = JSON.parse(this.responseText);
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadLogin", true);
+                xmlhttp.send(); 
+            }
+            
+            function validateLogin()    {
+                var email = document.getElementById("loginEmail").value;
+                var password = document.getElementById("loginPassword").value;
+                var out = false;
+                for (var i = 0; i < data.length; i++)   {
+                    if (email == data[i][1] && password == data[i][2]) {
+                        document.getElementById("loginEmail").setCustomValidity("");
+                        document.getElementById("userID").value = data[i][0];
+                        out = true;
+                    }
+                }
+                if (!out)  {
+                    document.getElementById("loginEmail").setCustomValidity("Email/Password does not match");
+                }
+            }
+            
+            function validateRegister() {
+                var email = document.getElementById("registerEmail").value;
+                var password1 = document.getElementById("registerPassword").value;
+                var password2 = document.getElementById("rePassword").value;
+                var out = false;
+                for (var i = 0; i < data.length; i++)   {
+                    if (email == data[i][1])    {
+                        document.getElementById("registerEmail").setCustomValidity("Email address already in use");
+                        out = true;
+                    }
+                }
+                if (!out)   {
+                    document.getElementById("registerEmail").setCustomValidity("");
+                }
+                if (password1 == password2) {
+                    document.getElementById("rePassword").setCustomValidity("");
+                } else  {
+                    document.getElementById("rePassword").setCustomValidity("Passwords do not match");
+                }
+            }
+            
+            $(function(){
+				var includes = $('[data-include]');
+				jQuery.each(includes, function(){
+					var file = $(this).data('include') + '.html';
+					$(this).load(file);
+				});
+			});
+        </script>
+		<link rel="stylesheet" href="../CSS/style.css"/>
+	</head>
+    <body>
+		<div data-include="header"></div>
+		<div class="wrapper" style="padding-top:80px; padding-bottom:90px">
+			<div style="grid-column:1/13; position:relative; text-align:center;">
+				<img src="../Images/login header.png" width="100%"/>
+				<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+					<h1>JOIN US!</h1>
+				</div>
+			</div>
+			<div class="grouprow" style="align-items:start;text-align:center;">
+				<div style="grid-column:1/3;"></div>
+				<div style="grid-column:3/7">
+					<form action="../Controllers/userManagement.php" method="POST">
+						<h2>Log in</h2>
+						<input type="email" class="forms" name="loginEmail" id="loginEmail" placeholder="EMAIL ADDRESS" required/><br/>
+						<input type="password" class="forms" name="loginPassword" id="loginPassword" placeholder="PASSWORD" required/><br/>
+						<input type="hidden" class="forms" name="userID" id="userID"/>
+						<input type="submit" class="inputButton" name="login" VALUE="LOG IN" onclick="validateLogin()"/>
+						</form>
+				</div>
+				<div style="grid-column:7/11;">
+					<form action="../Controllers/userManagement.php" method="POST">
+						<h2>Register</h2>
+						<input type="text" class="forms" name="firstName" placeholder="FIRST NAME" required/><br/>
+						<input type="text" class="forms" name="lastName" placeholder="LAST NAME" required/><br/>
+						<input type="email" class="forms" name="registerEmail" id="registerEmail" placeholder="EMAIL ADDRESS" required/><br>
+						<input type="password" class="forms" name="registerPassword" id="registerPassword" placeholder="PASSWORD" required/><br/>
+						<input type="password" class="forms" name="rePassword" id="rePassword" placeholder="RE-ENTER PASSWORD" required/><br/>
+						<input type="checkbox" name="news"/>
+						<span style="font-size:10px">SIGN UP FOR OUR MONTHLY NEWSLETTER</span><br/>		
+						<input type="submit" class="inputButton" name="register" value="REGISTER" onclick="validateRegister()"/>
+					</form>
+				</div>			
+				<div style="grid-column:11/13;"></div>
+			</div>	
+		</div>
+		<div data-include="footer"></div>
+    </body>
+</html>

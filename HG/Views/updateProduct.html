@@ -1,0 +1,152 @@
+<html>
+    <head>
+        <title>Update Product</title>
+        <link rel="stylesheet" href="../CSS/styleCM.css"/>
+        <style>
+            .wrapper
+            {
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-row-gap:2em;
+                text-align:center;
+            }
+
+            hr
+            {
+                display: block;
+                height: 1px;
+                border: 0;
+                border-top: 1px solid black;
+                margin: 1em 0;
+                padding: 0;
+            }
+            
+            table
+            {
+                font-family: Poppins, sans serif;
+                font-size: 14pt;
+            }
+            
+            td
+            {   
+                text-align:right;
+                vertical-align: middle;
+                padding: 10px;
+            }
+            
+            input, select
+            {
+                resize: none;
+                font-family: Poppins, sans serif;
+                font-size: 14pt;
+            }
+
+            td *
+            {
+                width: 100%;
+            }
+        </style>
+        <script>
+            window.onload = function()  {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {   
+                    if (this.readyState == 4 && this.status == 200) {   
+                        var details = JSON.parse(this.responseText);
+                        document.getElementById("name").value = details[0];
+                        document.getElementById("keyword").value = details[1];
+                        document.getElementById("price").value = details[2];
+                        document.getElementById("size").value = details[3];
+                        document.getElementById("currentImage").innerHTML = details[4];
+                        document.getElementById("hiddenImage").value = details[4];
+                        document.getElementById("available").value = details[5];
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/ContentManagement.php?x=loadUpdateProduct", true);
+                xmlhttp.send();
+            }
+        </script>
+    </head>
+    <body style="background-color: #e1e1e1;">
+        <div class="wrapper">
+            <div style="grid-column:1/13;">
+                <h1 class="titlefont" style="color:black;">Content Management</h1>       
+            </div>
+            <div style="grid-column:1/13;">
+                <hr/>
+                <h1 class="subtitlefont" style="color:black;">Update Product</h1>
+            </div>
+            <form action="../Controllers/contentManagement.php" method="post" enctype="multipart/form-data" style="grid-column:1/13; display:grid; grid-template-columns:repeat(12, 1fr);">
+                <div style="grid-column:1/6;" align="right">
+                    <table>
+                        <tr>
+                            <td>Product Name</td>
+                            <td><input type="text" name="name" id="name" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Keyword</td>
+                            <td>
+                                <select id="keyword" name="keyword">
+                                    <option value="Blouse">Blouse</option>
+                                    <option value="Dress">Dress</option>
+                                    <option value="Jeans">Jeans</option>
+                                    <option value="Shorts">Shorts</option>
+                                    <option value="Skirt">Skirt</option>
+                                    <option value="Top">Top</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Price</td>
+                            <td><input type="number" name="price" id="price" min="10" step="10" required/></td>
+                        </tr>
+                        <tr>
+                            <td>Size</td>
+                            <td>
+                                <select id="size" name="size">
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Image</td>
+                            <td id="currentImage" style="text-align:left;"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><input type="file" name="image" id="image" accept="image/x-png,image/gif,image/jpeg"></td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>
+                                <select id="available" name="available">
+                                    <option value=1>Available</option>
+                                    <option value=0>Unavailable</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="grid-column:6/8;">
+                </div>
+                <div style="grid-column:8/13;" align="left">
+                    <input type="hidden" name="currentImage" id="hiddenImage"/>
+                    <input type="submit" name="updateProduct" class="defaultbutton" value="SUBMIT DETAILS"/>
+                </div>  
+            </form>
+            <div style="grid-column:1/13;">
+                <hr/>
+            </div>
+            <div style="grid-column:1/6;" align="right">
+                <input type="button" class="defaultbutton" value="BACK" onclick="location.href='updateCollection.html'"/>
+            </div>
+            <div style="grid-column:6/8;">
+            </div>
+            <div style="grid-column:8/13;" align="left">
+            </div>
+        </div>
+    </body>
+</html>

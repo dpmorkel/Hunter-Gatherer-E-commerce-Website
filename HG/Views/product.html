@@ -1,0 +1,107 @@
+<html>
+    <head>
+        <title>Product</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+        <link rel="stylesheet" href="../CSS/style.css"/>
+		<style type="text/css">
+			.wrapper{
+				display:grid;
+				grid-template-columns: repeat(12, 1fr);
+				grid-auto-rows: minmax (100px, auto);  
+				grid-row-gap:3em;
+				text-align:center;
+			}
+			
+			.grouprow{
+			display:grid;
+			grid-template-columns:repeat(12, 1fr);
+			grid-column:1/13;
+			
+		}
+		</style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        document.getElementById("name").innerHTML = data[0];
+                        document.getElementById("image").setAttribute("src", data[4]);
+                        document.getElementById("price").innerHTML = "R" + data[2];
+                        switch(data[3]) {
+                            case "XS":
+                                document.getElementById("size").innerHTML = "Extra Small";
+                                break;
+                            case "S":
+                                document.getElementById("size").innerHTML = "Small";
+                                break;
+                            case "M":
+                                document.getElementById("size").innerHTML = "Medium";
+                                break;
+                            case "L":
+                                document.getElementById("size").innerHTML = "Large";
+                                break;
+                            case "XL":
+                                document.getElementById("size").innerHTML = "Extra Large";
+                                break;
+                            default:
+                                document.getElementById("size").innerHTML = "Not Stated";
+                                break;
+                        }
+                        document.getElementById("keyword").innerHTML = "keyword: " + data[1];
+                        document.getElementById("keyword").setAttribute("style", "text-transform:uppercase");
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/productManagement.php?x=loadProduct", true);
+                xmlhttp.send();
+            }
+            
+            $(function(){
+				var includes = $('[data-include]');
+				jQuery.each(includes, function(){
+					var file = $(this).data('include') + '.html';
+					$(this).load(file);
+				});
+			}); 
+        </script>
+    </head>
+    <body>
+		<div data-include="header"></div>
+		<div class="wrapper" style="padding-top:80px; padding-bottom:100px;">
+            <form action="../Controllers/cartManagement.php" method="POST" style="grid-column:1/13;">
+                <div>
+                    <h2 id="name"></h2>
+                </div>
+                <div class="grouprow">
+                    <div style="grid-column:1/3"></div>
+                    <div style="grid-column:3/7;">
+                        <img id="image" style="width:100%;">
+                    </div>
+                    <div style="grid-column:7/11; padding-top:3em; padding-bottom:3em;">
+                        <h3 id="price"></h3>
+                        <h4 id="size"></h4>
+                        <h5 id="keyword" style="padding-bottom:5em;"></h5>
+                        <input type="submit" class="inputButton" name="addProduct" value="add to cart"/><br/>
+                        <input type="button" class="inputButton" value="continue shopping" onclick="location.href='collection.html'"/>
+                    </div>
+                    <div style="grid-column:11/13;"></div>
+                </div>
+            </form>
+		</div>
+		<div data-include="footer"></div>
+    </body>
+</html>

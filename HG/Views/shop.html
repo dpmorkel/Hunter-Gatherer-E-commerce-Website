@@ -1,0 +1,128 @@
+<html>
+    <head>
+        <title>Shop</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+        <link rel="stylesheet" href="../CSS/style.css"/>
+		<style type="text/css">
+			.wrapper{
+				display:grid;
+				grid-template-columns: repeat(12, 1fr);
+				grid-auto-rows: minmax (100px, auto);  
+				grid-row-gap:3em;
+				text-align:center;
+			}
+			.grouprow{
+				display:grid;
+				grid-template-columns:repeat(12, 1fr);
+				grid-column:1/13;
+			}
+		</style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        var form = document.getElementById("collections");
+                        var collectionID = document.createElement("input");
+                        collectionID.setAttribute("type", "hidden");
+                        collectionID.setAttribute("name", "collectionID");
+                        form.appendChild(collectionID);
+                        for (var row = 0; row < data.length; row++) {
+                            var imageDiv = document.createElement("div");
+                            imageDiv.setAttribute("style", "grid-column:1/2");
+                            var image = document.createElement("img");
+                            image.setAttribute("src", data[row][3]);
+                            image.setAttribute("style", "width:100%");
+                            var textDiv = document.createElement("div");
+                            textDiv.setAttribute("style", "grid-column:2/4");
+                            var nestedDiv = document.createElement("div");
+                            nestedDiv.setAttribute("style", "display:grid; grid-template-rows:repeat(5,1fr);align-items:end;");
+                            var detailsDiv = document.createElement("div");
+                            detailsDiv.setAttribute("style", "grid-row:1/5");
+                            var name = document.createElement("h3");
+                            name.setAttribute("style", "text-transform:uppercase");
+                            name.innerHTML = data[row][1] + " COLLECTION";
+                            var flavour = document.createElement("p");
+                            flavour.innerHTML = data[row][2];
+                            var signature = document.createElement("p");
+                            signature.innerHTML = "xx The Girl Behind HG";
+                            var shopDiv = document.createElement("div");
+                            shopDiv.setAttribute("style", "grid-row:5/6");
+                            var shop = document.createElement("input");
+                            shop.setAttribute("type", "submit");
+                            shop.setAttribute("name", "selectCollection");
+                            shop.setAttribute("value", "SHOP NOW");
+							shop.setAttribute("class", "inputButton");
+                            shop.setAttribute("id", data[row][0]);
+                            shop.onclick = function() {
+                                for (i = 0; i < data.length; i++)   {
+                                    if (data[i][0] == this.getAttribute("id"))  {
+                                        collectionID.setAttribute("value", data[i][0]);
+                                    }
+                                } 
+                            }
+                            var br = document.createElement("br");
+                            imageDiv.appendChild(image);
+                            detailsDiv.appendChild(name);
+                            detailsDiv.appendChild(flavour);
+                            detailsDiv.appendChild(signature);
+                            shopDiv.appendChild(shop);
+                            nestedDiv.appendChild(detailsDiv);
+                            nestedDiv.appendChild(shopDiv);
+                            textDiv.appendChild(nestedDiv);
+                            form.appendChild(imageDiv);
+                            form.appendChild(textDiv);
+                            form.appendChild(br);
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/productManagement.php?x=loadShop", true);
+                xmlhttp.send(); 
+            }
+            
+            $(function(){
+				var includes = $('[data-include]');
+				jQuery.each(includes, function(){
+					var file = $(this).data('include') + '.html';
+					$(this).load(file);
+				});
+			});
+        </script>
+   </head>
+    <body>
+		<div data-include="header"></div>
+		<div class="wrapper" style="padding-top:80px; padding-bottom:100px;">
+			<div style="grid-column:1/13; position:relative; text-align:center;">
+				<img src="../Images/shop header.png" width="100%"/>
+				<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+					<h1 id="collectionName">SHOP</h1>
+				</div>
+			</div>
+            <div class="grouprow" style="padding-top:80px;">
+                <div style="grid-column:1/3;"></div>
+                <div style="grid-column:3/11;">
+                    <form id="collections" action="../Controllers/productManagement.php" method="POST" style="display:grid; grid-template-columns:repeat(3, 1fr);grid-column-gap:3em;">
+                        <!--Dynamically load JS content-->
+                    </form>
+                </div>
+                <div style="grid-column:11/13;"></div>
+            </div>
+		</div>
+		<div data-include="footer"></div>
+    </body>
+</html>

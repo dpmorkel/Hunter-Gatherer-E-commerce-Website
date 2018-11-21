@@ -1,0 +1,252 @@
+<html>
+    <head>
+        <title>View Report</title>
+        <link rel="stylesheet" href="../CSS/styleCM.css"/>
+        <style>
+            .wrapper
+            {
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-row-gap:2em;
+                text-align:center;
+            }
+
+            hr
+            {
+                display: block;
+                height: 1px;
+                border: 0;
+                border-top: 1px solid black;
+                margin: 1em 0;
+                padding: 0;
+            }
+
+            table
+            {
+                border-collapse: collapse;
+                text-align: center;
+            }
+
+            td
+            {
+                padding: 10px;
+                border: 1px solid black;
+            }
+            
+            tr
+            {
+                background-color: white;
+            }
+            
+            table.customers
+            {
+                border-collapse: collapse;
+            }
+
+            table.customers th, table.customers td
+            {
+                padding: 10px;
+                border: 1px solid black;
+            }
+
+            table.customers th
+            {
+                background-color: #2b2b2b;
+                font-family: Poppins, sans serif;
+	            font-size: 13px;
+                font-weight: 500 medium;
+                letter-spacing: 3.6px;
+                color: white;
+            }
+
+        </style>
+        <script>    
+            window.onload = function()  {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {   
+                    if (this.readyState == 4 && this.status == 200) {   
+                        var view1 = JSON.parse(this.responseText);
+                        var passiveCustomers = view1[0];
+                        var totalCustomers = view1[1];
+                        document.getElementById("passiveCustomers").innerHTML = (100 - Math.round(passiveCustomers/totalCustomers*100)) + "%";
+                        if (passiveCustomers == 0)  {
+                            document.getElementById("passiveCustomers").style.width = (100 - (passiveCustomers/totalCustomers*100+1)) + "%";
+                        } else  {
+                            document.getElementById("passiveCustomers").style.width = (100 - (passiveCustomers/totalCustomers*100)) + "%";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/ContentManagement.php?x=loadViewReport1", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var view2 = JSON.parse(this.responseText);
+                        var table = document.getElementById("customers");
+                        var tbody = document.createElement("tbody"),tr, td, txt;
+                        for (var r = 0; r < view2.length; r++)    {
+                            tr = document.createElement("tr");
+                            for (var c = 0; c < 3; c++)   {
+                                td = document.createElement("td");
+                                if (c == 2) {
+                                    txt = document.createTextNode("R" + view2[r][c])
+                                } else  {
+                                    txt = document.createTextNode(view2[r][c]);
+                                }
+                                td.appendChild(txt);
+                                tr.appendChild(td);
+                            }
+                            tbody.appendChild(tr);
+                            table.appendChild(tbody);
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/contentManagement.php?x=loadViewReport2", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {   
+                    if (this.readyState == 4 && this.status == 200) {   
+                        var view3 = JSON.parse(this.responseText);
+                        document.getElementById("blouse").style.width = "1%";
+                        document.getElementById("blouse").innerHTML = "0%";
+                        document.getElementById("dress").style.width = "1%";
+                        document.getElementById("dress").innerHTML = "0%";
+                        document.getElementById("jeans").style.width = "1%";
+                        document.getElementById("jeans").innerHTML = "0%";
+                        document.getElementById("shorts").style.width = "1%";
+                        document.getElementById("shorts").innerHTML = "0%";
+                        document.getElementById("skirt").style.width = "1%";
+                        document.getElementById("skirt").innerHTML = "0%";
+                        document.getElementById("top").style.width = "1%";
+                        document.getElementById("top").innerHTML = "0%";
+                        var totalSales = 0;
+                        for (var i = 0; i < view3.length; i++)  {
+                            totalSales = totalSales + parseInt(view3[i][1]);
+                        }
+                        for (var j = 0; j < view3.length; j++)  {
+                            if (view3[j][0] == "Blouse") {
+                                document.getElementById("blouse").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("blouse").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                            if (view3[j][0] == "Dress") {
+                                document.getElementById("dress").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("dress").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                            if (view3[j][0] == "Jeans") {
+                                document.getElementById("jeans").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("jeans").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                            if (view3[j][0] == "Shorts") {
+                                document.getElementById("shorts").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("shorts").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                            if (view3[j][0] == "Skirt") {
+                                document.getElementById("skirt").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("skirt").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                            if (view3[j][0] == "Top") {
+                                document.getElementById("top").style.width = parseInt(view3[j][1])/totalSales*100 + "%";
+                                document.getElementById("top").innerHTML = Math.round(parseInt(view3[j][1])/totalSales*100) + "%";
+                            }
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/ContentManagement.php?x=loadViewReport3", true);
+                xmlhttp.send();
+
+            }
+        </script>
+    </head>
+    <body style="background-color: #e1e1e1;">
+        <div class="wrapper">
+            <div style="grid-column:1/13;">
+                <h1 class="titlefont" style="color:black;">Content Management</h1>       
+            </div>
+            <div style="grid-column:1/13;">
+                <hr/>
+                <h1 class="subtitlefont" style="color:black;">View Report</h1>
+            </div>
+            <div style="grid-column:1/5;">
+            </div>
+            <div style="grid-column:5/9;">
+                <h3>PASSIVE CUSTOMERS</h3>
+                <table width="100%">
+                    <tr>
+                        <td id="passiveCustomers" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/><br/>
+                <h3>TOP CUSTOMERS</h3>
+                <table width="100%" id="customers" class="customers">
+                    <tr>
+                        <th>FIRST NAME</th>
+                        <th>LAST NAME</th>
+                        <th>TOTAL SPEND</th>
+                    </tr>
+                    <!--Dynamically JS content-->
+                </table>
+                <br/><br/>
+                <h3>BEST SELLING PRODUCTS</h3>
+                <table width="100%">
+                    <tr>
+                        BLOUSE
+                        <td id="blouse" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        DRESS
+                        <td id="dress" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        JEANS
+                        <td id="jeans" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        SHORTS
+                        <td id="shorts" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        SKIRT
+                        <td id="skirt" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+                <br/>
+                <table width="100%">
+                    <tr>
+                        TOP
+                        <td id="top" style="background-color:a77f8a;"></td>
+                        <td style="background-color:#2b2b2b;"></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="grid-column:9/13;">
+            </div>
+            <div style="grid-column:1/13;">
+                <hr/>
+            </div>
+            <div style="grid-column:1/6;" align="right">
+                <input type="button" class="defaultbutton" value="BACK" onclick="location.href='contentManagement.html'"/>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <title>Collection</title>
+        <link href="https://fonts.googleapis.com/css?family=Poppins:300,500,700" rel="stylesheet"/>
+        <link rel="stylesheet" href="../CSS/style.css"/>   
+        <style type="text/css">
+            .wrapper{
+                display:grid;
+                grid-template-columns: repeat(12, 1fr);
+                grid-auto-rows: minmax (100px, auto);  
+                grid-row-gap:3em;
+                text-align:center;
+            }
+            .grouprow{
+                display:grid;
+                grid-template-columns:repeat(12, 1fr);
+                grid-column:1/13;
+                align-items:center;
+                justify-items:center;
+            }
+            </style>
+        <script src="../Images/jquery-3.3.1.min.js"></script>
+        <script>
+            window.onload=function()    {
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data != 0)   {
+                            document.getElementById("loginLogout").value = "Hi " + data + ", logout";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/userManagement.php?x=loadHeader", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        if (data.constructor === Array) {
+                            document.getElementById("collectionName").innerHTML = data[0];
+                            document.getElementById("collectionName").setAttribute("style", "text-transform:uppercase");
+                            document.getElementById("collectionName2").innerHTML = data[0] + " COLLECTION";
+                            document.getElementById("collectionName2").setAttribute("style", "text-transform:uppercase");
+                            document.getElementById("flavourText").innerHTML = data[1];
+                            document.getElementById("signature").innerHTML = "xx The Girl Behind HG";
+                        } else  {
+                            document.getElementById("collectionName").innerHTML = "SEARCH RESULTS";
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/productManagement.php?x=loadCollection1", true);
+                xmlhttp.send();
+                
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(this.responseText);
+                        var form = document.getElementById("products");
+                        var productID = document.createElement("input");
+                        productID.setAttribute("type", "hidden");
+                        productID.setAttribute("name", "productID");
+                        form.appendChild(productID);
+                        for (var row = 0; row < data.length; row++) {
+                            var div = document.createElement("div");
+                            var image = document.createElement("button");
+                            image.setAttribute("type", "submit");
+                            image.setAttribute("style", "border:none; background-color:transparent; cursor:pointer;");
+                            image.setAttribute("name", "selectProduct");
+                            image.setAttribute("value", "submit");
+                            image.setAttribute("id", data[row][0]);
+                            image.onclick = function()  {
+                                for (i = 0; i < data.length; i++)   {
+                                    if (data[i][0] == this.getAttribute("id"))  {
+                                        productID.setAttribute("value", data[i][0]);
+                                    }
+                                }
+                            }
+                            var img = document.createElement("img");
+                            img.setAttribute("src", data[row][3]);
+                            img.setAttribute("width", "100%");
+                            var details = document.createElement("h4");
+                            details.setAttribute("style", "text-transform:uppercase");
+                            details.innerHTML = data[row][1] + " // R" + data[row][2];
+                            image.appendChild(img);
+                            div.appendChild(image);
+                            div.appendChild(details);
+                            form.appendChild(div);
+                        }
+                    }
+                }
+                xmlhttp.open("GET", "../Controllers/productManagement.php?x=loadCollection2", true);
+                xmlhttp.send();
+                
+            }
+            
+            $(function(){
+				var includes = $('[data-include]');
+				jQuery.each(includes, function(){
+					var file = $(this).data('include') + '.html';
+					$(this).load(file);
+				});
+			});
+        </script>
+	</head>
+    <body>
+		<div data-include="header"></div>
+		<div class="wrapper" style="padding-top:80px; padding-bottom:100px;">
+			<div style="grid-column:1/13; position:relative; text-align:center;">
+				<img src="../Images/collection header.png" width="100%"/>
+				<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:100%;">
+					<h1 id="collectionName"></h1>
+				</div>
+			</div>
+			<div class="grouprow">
+				<div style="grid-column:1/3;"></div>
+				<div style="grid-column:3/11;">
+					<h2 id="collectionName2"></h2>
+					<p id="flavourText"></p>
+					<p id="signature"></p>
+				</div>
+				<div style="grid-column:11/13;"></div>
+			</div>
+            <div class="grouprow">
+                <div style="grid-column:1/3;"></div>
+                <div style="grid-column:3/11;">
+                    <form id="products" action="../Controllers/productManagement.php" method="POST" style="display:grid; grid-template-columns:repeat(4, 1fr);grid-column-gap:3em;">
+                        <!--Dynamically load JS content-->
+                    </form>
+                </div>
+                <div style="grid-column:11/13;"></div>
+            </div>
+		</div>
+		<div data-include="footer"></div>
+    </body>
+</html>
